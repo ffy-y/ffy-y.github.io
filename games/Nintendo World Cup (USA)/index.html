@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Nintendo World Cup (USA)nes</title>
+        <meta name = viewport content = "width = device-width, initial-scale = 1">
+        <link rel="icon" href="https://www.fengfayi.cn/static/img/favicon.ico">
+        <link rel = "stylesheet" type = "text/css" href = "../basesetting.css">
+        <script src = "../basesetting.js"></script>
+        
+    </head>
+
+    <body>
+        <script>
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            let language = urlParams.get('language');
+            //console.log('language:' + language);
+            if (language === null || language === undefined) {
+                language = "zh-CN"
+            }
+            window.onload = loadEvent("Nintendo World Cup (USA).nes",language);
+        </script>
+    </body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>双截龙III(全人物版,血值为255)</title>
+        <meta name = viewport content = "width = device-width, initial-scale = 1">
+        <link rel="icon" href="https://www.fengfayi.cn/static/img/favicon.ico">
+        <link rel = "stylesheet" type = "text/css" href = "../basesetting.css">
+        <script src = "../basesetting.js"></script>
+        
+    </head>
+
+    <body>
+        <script>
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            let language = urlParams.get('language');
+            //console.log('language:' + language);
+            if (language === null || language === undefined) {
+                language = "zh-CN"
+            }
+            window.onload = loadEvent("双截龙III(全人物版,血值为255).nes",language);
+        </script>
+    </body>
+</html>
