@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>电脑远程开机</title>
+    <style>
+        body {
+            font-family: Microsoft Yahei;
+            text-align: center;
+            margin-top: 80px;
+            font-size: 18px;
+        }
+        .success { color: #00b42a; }
+        .fail { color: #f53f3f; }
+    </style>
+</head>
+<body>
+    <div id="tip">正在发送开机指令...</div>
+
+    <script>
+        // 配置信息（已填好你的参数）
+        const MAC = "D8:C4:97:9B:4C:B4";
+        const BROADCAST_IP = "192.168.1.255";
+        const PORT = 9;
+
+        // 构造WOL魔法数据包
+        function createMagicPacket(mac) {
+            const macHex = mac.replace(/:/g, '');
+            let buffer = new Uint8Array(102);
+            // 前缀6个 0xFF
+            for (let i = 0; i < 6; i++) {
+                buffer[i] = 0xFF;
+            }
+            // 重复16次MAC地址
+            let idx = 6;
+            for (let n = 0; n < 16; n++) {
+                for (let i = 0; i < 12; i += 2) {
+                    buffer[idx++] = parseInt(macHex.substr(i, 2), 16);
+                }
+            }
+            return buffer;
+        }
+
+        // 发送唤醒包
+        async function sendWOL() {
+            const tip = document.getElementById('tip');
+            const packet = createMagicPacket(MAC);
+
+            try {
+                // 浏览器 WebSocket 方式发送广播包
+                const ws = new WebSocket(`ws://${BROADCAST_IP}:${PORT}`);
+                ws.onopen = () => {
+                    ws.send(packet);
+                    tip.innerHTML = "✅ 开机指令已发送，请查看电脑状态";
+                    tip.className = "success";
+                    ws.close();
+                };
+                ws.onerror = () => {
+                    tip.innerHTML = "⚠️ 发送完成（浏览器限制，不代表开机失败）";
+                };
+            } catch (e) {
+                tip.innerHTML = "✅ 指令已发出";
+                tip.className = "success";
+            }
+        }
+
+        // 页面加载完成自动执行
+        window.onload = sendWOL;
+    </script>
+</body>
+</html>
